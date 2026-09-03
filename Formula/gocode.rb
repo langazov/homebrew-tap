@@ -3,27 +3,26 @@
 class Gocode < Formula
   desc "Terminal-based AI coding agent"
   homepage "https://github.com/langazov/gocode"
-  version "0.1.2"
   license "MIT"
 
   on_macos do
     on_arm do
-      url "https://github.com/langazov/gocode/releases/download/v#{version}/gocode-#{version}-macos-arm64.tar.gz"
+      url "https://github.com/langazov/gocode/releases/download/v0.1.2/gocode-0.1.2-macos-arm64.tar.gz"
       sha256 "dc861e8b2b6693f8cced05208b28af0473a5ce05c711e26d6dbc3c5b2cc3ecbe"
     end
     on_intel do
-      url "https://github.com/langazov/gocode/releases/download/v#{version}/gocode-#{version}-macos-x64.tar.gz"
+      url "https://github.com/langazov/gocode/releases/download/v0.1.2/gocode-0.1.2-macos-x64.tar.gz"
       sha256 "3453da73419859f6b926300d0b19b22fbab08a608537e0cd4e83761ac0f79cb6"
     end
   end
 
   on_linux do
     on_arm do
-      url "https://github.com/langazov/gocode/releases/download/v#{version}/gocode-#{version}-linux-arm64.tar.gz"
+      url "https://github.com/langazov/gocode/releases/download/v0.1.2/gocode-0.1.2-linux-arm64.tar.gz"
       sha256 "e07342b18c5c77e969e2b6ebf7778b0f858b3d8779413382ef46dbb18eafac91"
     end
     on_intel do
-      url "https://github.com/langazov/gocode/releases/download/v#{version}/gocode-#{version}-linux-x64.tar.gz"
+      url "https://github.com/langazov/gocode/releases/download/v0.1.2/gocode-0.1.2-linux-x64.tar.gz"
       sha256 "ae8793d67a620a49cd808e7f6a28834c517dd9d9f320ef8a3ff8882356003fcb"
     end
   end
