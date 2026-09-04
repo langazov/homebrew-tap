@@ -7,31 +7,85 @@ class Gocode < Formula
 
   on_macos do
     on_arm do
-      url "https://github.com/langazov/gocode/releases/download/v0.1.12/gocode-0.1.12-macos-arm64.tar.gz"
-      sha256 "92260addb1471326c6ed630f40d9ab24dbccb8caecde9286565fa4016cd6dc1b"
+      url "https://github.com/langazov/gocode/releases/download/v0.1.13/gocode-0.1.13-macos-arm64.tar.gz"
+      sha256 "9fe2671b01ca3ce3bbd237f10c73b9f921a62a78f8ca3effe8e96c3db4198670"
     end
     on_intel do
-      url "https://github.com/langazov/gocode/releases/download/v0.1.12/gocode-0.1.12-macos-x64.tar.gz"
-      sha256 "cad6e0d65c0fbdefcf07d6d45dfcbbc9fb62175eafc8cf4b66cef6b73fa2eb8b"
+      url "https://github.com/langazov/gocode/releases/download/v0.1.13/gocode-0.1.13-macos-x64.tar.gz"
+      sha256 "408dc1bff4a971eb7bf31ee3dfc2329f62c9901e679e232d169831e98cd158d2"
     end
   end
 
   on_linux do
     on_arm do
-      url "https://github.com/langazov/gocode/releases/download/v0.1.12/gocode-0.1.12-linux-arm64.tar.gz"
-      sha256 "861a178362b3f5f544f8765ff0b4d50caf0d8416f55c6f4378cbc2b4984e5372"
+      url "https://github.com/langazov/gocode/releases/download/v0.1.13/gocode-0.1.13-linux-arm64.tar.gz"
+      sha256 "61ccfd49250b224b569dfa85323ca79de325709ef32babaee058269affd143c6"
     end
     on_intel do
-      url "https://github.com/langazov/gocode/releases/download/v0.1.12/gocode-0.1.12-linux-x64.tar.gz"
-      sha256 "e6cd416d82e453f5912f6d23e90d4a3fd7a88b853be83d83a49c08ed7fa7cbfe"
+      url "https://github.com/langazov/gocode/releases/download/v0.1.13/gocode-0.1.13-linux-x64.tar.gz"
+      sha256 "e07173eda580bc5b63bec3b1af03baf7c29108f2b7b40543485090fbb3151744"
     end
   end
 
   def install
     bin.install "gocode"
+    # A general LSP server, not a gocode internal: editors are pointed at it
+    # directly, and gocode's own registry finds it by name on PATH.
+    bin.install "mdlsp"
+    # The plugin stays out of PATH — it is not a command anyone runs — but
+    # keeps its directory layout, since the loader resolves a plugin by
+    # reading gocode-plugin.json next to the binary.
+    libexec.install "rag-plugin"
+  end
+
+  # Wire both extras into the user's global config. Homebrew runs this as the
+  # user, so it reaches ~/.config/gocode; the edits are idempotent, preserve
+  # every other key, and refuse to rewrite a config carrying comments.
+  #
+  # opt_ paths are used rather than the versioned Cellar path so an upgrade
+  # does not leave the config pointing at a directory that no longer exists.
+  #
+  # A failure here is warned about, not raised: the binaries are installed and
+  # usable either way, and a config this cannot parse is a reason to tell the
+  # user rather than to fail their upgrade.
+  def post_install
+    [
+      ["lsp", "enable", "mdlsp",
+       "--global", "--command", opt_bin/"mdlsp", "--extensions", ".md,.markdown"],
+      ["plugin", "enable", (opt_libexec/"rag-plugin").to_s,
+       "--global", "--options", '{"embeddingProvider":"openai"}'],
+    ].each do |args|
+      system bin/"gocode", *args
+    rescue StandardError => e
+      opoo "could not run 'gocode #{args[0]} #{args[1]}': #{e}"
+      opoo "Wire it up by hand; 'brew info gocode' lists the commands."
+    end
+  end
+
+  def caveats
+    <<~EOS
+      Two extras were installed alongside gocode and wired into
+      ~/.config/gocode:
+
+        mdlsp       markdown language server, started for .md files
+        rag-plugin  semantic code search (rag_index / rag_search tools)
+
+      rag-plugin embeds through an OpenAI-compatible endpoint, so it needs a
+      credential before its tools will work:
+
+        gocode auth login
+
+      To turn either off again (the files stay installed):
+
+        gocode lsp disable mdlsp
+        gocode plugin disable #{opt_libexec}/rag-plugin
+    EOS
   end
 
   test do
     assert_match version.to_s, shell_output("#{bin}/gocode --version")
+    assert_match "mdlsp", shell_output("#{bin}/mdlsp --version")
+    # The manifest is what makes the directory loadable as a plugin.
+    assert_predicate libexec/"rag-plugin/gocode-plugin.json", :exist?
   end
 end
