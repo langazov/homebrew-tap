@@ -7,23 +7,23 @@ class Gocode < Formula
 
   on_macos do
     on_arm do
-      url "https://github.com/langazov/gocode/releases/download/v0.1.16/gocode-0.1.16-macos-arm64.tar.gz"
-      sha256 "c3be8354d979a0187a637e2099812a31868e009a2bb5ca902fd84b3ed39308e2"
+      url "https://github.com/langazov/gocode/releases/download/v0.1.17/gocode-0.1.17-macos-arm64.tar.gz"
+      sha256 "70f4b5e5ca2e7909c40c45304b84cee7d58ab2340a7b5677a9b633f6757f9f51"
     end
     on_intel do
-      url "https://github.com/langazov/gocode/releases/download/v0.1.16/gocode-0.1.16-macos-x64.tar.gz"
-      sha256 "9caf07aa6047ea1face200fafd125114dbb02d1c754b12f030e4659b51e08a79"
+      url "https://github.com/langazov/gocode/releases/download/v0.1.17/gocode-0.1.17-macos-x64.tar.gz"
+      sha256 "761d81507439ec3a97b39415b543e1130433e72b09e8e52394d5ab53b311fbad"
     end
   end
 
   on_linux do
     on_arm do
-      url "https://github.com/langazov/gocode/releases/download/v0.1.16/gocode-0.1.16-linux-arm64.tar.gz"
-      sha256 "ecc247247306697dd631d187cad7d9778d22c4790c1e65f5d11984610922464f"
+      url "https://github.com/langazov/gocode/releases/download/v0.1.17/gocode-0.1.17-linux-arm64.tar.gz"
+      sha256 "ea5117d4ca5ff8a5315221473369f7e58f73853bda338bea09e66dc525722be4"
     end
     on_intel do
-      url "https://github.com/langazov/gocode/releases/download/v0.1.16/gocode-0.1.16-linux-x64.tar.gz"
-      sha256 "000d1acce63bb9a4911b2bcf21c218313147cccd866109f406150dcad3c281de"
+      url "https://github.com/langazov/gocode/releases/download/v0.1.17/gocode-0.1.17-linux-x64.tar.gz"
+      sha256 "9918efdbda54bae4e343b34f1942b3a3140942250980de63afc217c3c516ed47"
     end
   end
 
@@ -42,8 +42,16 @@ class Gocode < Formula
   # user, so it reaches ~/.config/gocode; the edits are idempotent, preserve
   # every other key, and refuse to rewrite a config carrying comments.
   #
-  # opt_ paths are used rather than the versioned Cellar path so an upgrade
-  # does not leave the config pointing at a directory that no longer exists.
+  # The plugin is enabled by bare name. gocode searches <prefix>/libexec for
+  # plugins, relative to its own binary (plugin.BundledRoots), so the name is
+  # enough and the config stays free of installation-specific paths — it keeps
+  # working across a Homebrew prefix change, and  is something a user can actually type.
+  #
+  # Earlier versions wrote the absolute libexec path instead, because no such
+  # search path existed. The disable below removes that stale entry on
+  # upgrade, and is a no-op on a fresh install. It matters: an absolute path
+  # and a bare name are different refs that nothing deduplicates, so leaving
+  # both would load rag-plugin twice and spawn two copies of it at every boot.
   #
   # A failure here is warned about, not raised: the binaries are installed and
   # usable either way, and a config this cannot parse is a reason to tell the
@@ -52,7 +60,8 @@ class Gocode < Formula
     [
       ["lsp", "enable", "mdlsp",
        "--global", "--command", opt_bin/"mdlsp", "--extensions", ".md,.markdown"],
-      ["plugin", "enable", (opt_libexec/"rag-plugin").to_s,
+      ["plugin", "disable", (opt_libexec/"rag-plugin").to_s, "--global"],
+      ["plugin", "enable", "rag-plugin",
        "--global", "--options", '{"embeddingProvider":"openai"}'],
     ].each do |args|
       system bin/"gocode", *args
@@ -78,7 +87,7 @@ class Gocode < Formula
       To turn either off again (the files stay installed):
 
         gocode lsp disable mdlsp
-        gocode plugin disable #{opt_libexec}/rag-plugin
+        gocode plugin disable rag-plugin
     EOS
   end
 
