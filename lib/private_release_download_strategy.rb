@@ -11,7 +11,6 @@
 # repository hosting the release.
 class PrivateReleaseDownloadStrategy < AbstractDownloadStrategy
   def fetch(timeout: nil)
-    url = resource.url
     m = %r{\Ahttps://github\.com/(?<owner>[\w.-]+)/(?<repo>[\w.-]+)/releases/download/(?<tag>[^/]+)/(?<asset>[^/?#]+)\z}.match(url)
     raise "URL is not a GitHub release download URL: #{url}" unless m
 
@@ -45,9 +44,7 @@ class PrivateReleaseDownloadStrategy < AbstractDownloadStrategy
   end
 
   def cached_location
-    # Content-disposition carries the real filename; keep a stable cache
-    # path derived from the URL basename.
-    basename = resource.url.rpartition("/").last
+    basename = url.rpartition("/").last
     @cached_location ||= HOMEBREW_CACHE/basename
   end
 
