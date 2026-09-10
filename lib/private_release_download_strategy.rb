@@ -4,12 +4,12 @@
 #
 # Homebrew's stock GitHub release strategy does not authenticate, so private
 # assets 404. This strategy resolves the release by tag through the GitHub
-# API, finds the asset, and downloads it from the API asset endpoint using
-# the user's HOMEBREW_GITHUB_API_TOKEN.
+# API and downloads the asset from the API asset endpoint using the user's
+# HOMEBREW_GITHUB_API_TOKEN.
 #
 # Requirement: HOMEBREW_GITHUB_API_TOKEN with read (contents) access to the
 # repository hosting the release.
-class PrivateReleaseDownloadStrategy < AbstractDownloadStrategy
+class PrivateReleaseDownloadStrategy < CurlDownloadStrategy
   def fetch(timeout: nil)
     m = %r{\Ahttps://github\.com/(?<owner>[\w.-]+)/(?<repo>[\w.-]+)/releases/download/(?<tag>[^/]+)/(?<asset>[^/?#]+)\z}.match(url)
     raise "URL is not a GitHub release download URL: #{url}" unless m
@@ -23,32 +23,27 @@ class PrivateReleaseDownloadStrategy < AbstractDownloadStrategy
       EOS
     end
 
+    require "open3"
+    require "json"
     auth = ["Authorization: token #{token}",
             "Accept: application/vnd.github+json",
             "X-GitHub-Api-Version: 2022-11-28"]
-
     release_url = "https://api.github.com/repos/#{m[:owner]}/#{m[:repo]}/releases/tags/#{m[:tag]}"
-    json, _err, _status = curl_output "--silent", "--show-error", "--fail",
-                                      "--header", auth[0], "--header", auth[1], "--header", auth[2],
-                                      release_url
-    release = Utils::JSON.parse(json)
+    json, _err, _status = Open3.capture3("curl", "--silent", "--show-error", "--fail",
+                                         "--header", auth[0], "--header", auth[1], "--header", auth[2],
+                                         release_url)
+    release = JSON.parse(json)
     asset = release["assets"].find { |a| a["name"] == m[:asset] }
     raise "Asset #{m[:asset]} not found in release #{m[:tag]}" unless asset
 
+    ohai "Downloading #{m[:asset]} from private release #{m[:tag]}"
+    FileUtils.rm_f(temporary_path)
     curl_download asset["url"],
-                  to: cached_location,
-                  timeout: timeout,
-                  headers: ["Authorization: token #{token}",
-                            "Accept: application/octet-stream",
-                            "X-GitHub-Api-Version: 2022-11-28"]
-  end
-
-  def cached_location
-    basename = url.rpartition("/").last
-    @cached_location ||= HOMEBREW_CACHE/basename
-  end
-
-  def clear_cache
-    cached_location.unlink if cached_location.exist?
+                  "--header", "Authorization: token #{token}",
+                  "--header", "Accept: application/octet-stream",
+                  "--header", "X-GitHub-Api-Version: 2022-11-28",
+                  to: temporary_path
+    cached_location.dirname.mkpath
+    FileUtils.mv(temporary_path, cached_location)
   end
 end
