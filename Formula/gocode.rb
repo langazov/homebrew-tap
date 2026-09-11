@@ -7,23 +7,23 @@ class Gocode < Formula
 
   on_macos do
     on_arm do
-      url "https://github.com/langazov/gocode/releases/download/v0.1.31/gocode-0.1.31-macos-arm64.tar.gz"
-      sha256 "5c232294cee0ba7cab8b97a6221728cce664c6ed4de8e506a31b3e94d47c96c4"
+      url "https://s3.gocoder.org/releases/gocode/v0.1.32/gocode-0.1.32-macos-arm64.tar.gz"
+      sha256 "1127a9762b9bc2bf77c9f01bd20e952569db4c81c8c1ea387dcaf39918534ee8"
     end
     on_intel do
-      url "https://github.com/langazov/gocode/releases/download/v0.1.31/gocode-0.1.31-macos-x64.tar.gz"
-      sha256 "a5824c8afaed3b0afa624fc8be4263f09b1c6941db20e492adf2481286403cf0"
+      url "https://s3.gocoder.org/releases/gocode/v0.1.32/gocode-0.1.32-macos-x64.tar.gz"
+      sha256 "8da947943569cb7be93a299e14fb7a2aa4cb42fe2e560a94356e59fb63df38eb"
     end
   end
 
   on_linux do
     on_arm do
-      url "https://github.com/langazov/gocode/releases/download/v0.1.31/gocode-0.1.31-linux-arm64.tar.gz"
-      sha256 "a962285e9ef9daa2b066c09d1de6f6ca41649fb8e42de6a6a7aeaf705ccef1f7"
+      url "https://s3.gocoder.org/releases/gocode/v0.1.32/gocode-0.1.32-linux-arm64.tar.gz"
+      sha256 "9bda66d0b0a8596f0ae1b4171d8b5bf61a5889b3cd9feaffd16ad9fae733b437"
     end
     on_intel do
-      url "https://github.com/langazov/gocode/releases/download/v0.1.31/gocode-0.1.31-linux-x64.tar.gz"
-      sha256 "76a9a91140368dd00fc371e00b1d657681a452c2f64b9d640634e4cffd80f77f"
+      url "https://s3.gocoder.org/releases/gocode/v0.1.32/gocode-0.1.32-linux-x64.tar.gz"
+      sha256 "224ba372632966ab9eb0848d0a1c962093d34c4fbe8ca822ac28f2eaa3fd7746"
     end
   end
 
@@ -45,7 +45,8 @@ class Gocode < Formula
   # The plugin is enabled by bare name. gocode searches <prefix>/libexec for
   # plugins, relative to its own binary (plugin.BundledRoots), so the name is
   # enough and the config stays free of installation-specific paths — it keeps
-  # working across a Homebrew prefix change, and  is something a user can actually type.
+  # working across a Homebrew prefix change, and `gocode plugin disable
+  # rag-plugin` is something a user can actually type.
   #
   # Earlier versions wrote the absolute libexec path instead, because no such
   # search path existed. The disable below removes that stale entry on
