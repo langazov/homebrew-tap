@@ -4,25 +4,30 @@ class Gocode < Formula
   desc "Terminal-based AI coding agent"
   homepage "https://github.com/langazov/gocode"
   license "MIT"
+  # Releases up to 0.1.43 were briefly served from a mirror host, so brew
+  # sniffed the version out of the filename and recorded "64" (from
+  # ...-arm64.tar.gz). Scheme 1 outranks that, letting those installs
+  # upgrade to versions numerically below 64.
+  version_scheme 1
 
   on_macos do
     on_arm do
-      url "https://s3.gocoder.org/releases/gocode/v0.1.43/gocode-0.1.43-macos-arm64.tar.gz"
+      url "https://github.com/langazov/gocode/releases/download/v0.1.43/gocode-0.1.43-macos-arm64.tar.gz"
       sha256 "027fcd69aa47e7f91e09ac6c0904f24fe7c9e126f388fea47a3db2aafa92f3c6"
     end
     on_intel do
-      url "https://s3.gocoder.org/releases/gocode/v0.1.43/gocode-0.1.43-macos-x64.tar.gz"
+      url "https://github.com/langazov/gocode/releases/download/v0.1.43/gocode-0.1.43-macos-x64.tar.gz"
       sha256 "1c5e633df1ede4f3fcef54ba00f21aa9a7f11f14373a0c347f072ef6beedb3d9"
     end
   end
 
   on_linux do
     on_arm do
-      url "https://s3.gocoder.org/releases/gocode/v0.1.43/gocode-0.1.43-linux-arm64.tar.gz"
+      url "https://github.com/langazov/gocode/releases/download/v0.1.43/gocode-0.1.43-linux-arm64.tar.gz"
       sha256 "3be9d23a13d18494744c364cf5a53710cb94858072857a2e901f56086334d4c5"
     end
     on_intel do
-      url "https://s3.gocoder.org/releases/gocode/v0.1.43/gocode-0.1.43-linux-x64.tar.gz"
+      url "https://github.com/langazov/gocode/releases/download/v0.1.43/gocode-0.1.43-linux-x64.tar.gz"
       sha256 "2c2b7b7080efd52807a269dd9ab0e409bb6d5fdba8b6f60926c798f69cff6860"
     end
   end
