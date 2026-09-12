@@ -7,23 +7,23 @@ class Gocode < Formula
 
   on_macos do
     on_arm do
-      url "https://s3.gocoder.org/releases/gocode/v0.1.42/gocode-0.1.42-macos-arm64.tar.gz"
-      sha256 "c9bd6994b71ef2d175798a8f63f4c9e2ad17d2b946eda679b820017929caa6a2"
+      url "https://s3.gocoder.org/releases/gocode/v0.1.43/gocode-0.1.43-macos-arm64.tar.gz"
+      sha256 "027fcd69aa47e7f91e09ac6c0904f24fe7c9e126f388fea47a3db2aafa92f3c6"
     end
     on_intel do
-      url "https://s3.gocoder.org/releases/gocode/v0.1.42/gocode-0.1.42-macos-x64.tar.gz"
-      sha256 "a68829e507134350f6e1a38bf39ae8cb382d852c58631e27220643f91ae46de2"
+      url "https://s3.gocoder.org/releases/gocode/v0.1.43/gocode-0.1.43-macos-x64.tar.gz"
+      sha256 "1c5e633df1ede4f3fcef54ba00f21aa9a7f11f14373a0c347f072ef6beedb3d9"
     end
   end
 
   on_linux do
     on_arm do
-      url "https://s3.gocoder.org/releases/gocode/v0.1.42/gocode-0.1.42-linux-arm64.tar.gz"
-      sha256 "779b86ba6bd07900acc3d02b5e26ed14d2f37c3755882ca2437f49e940783f84"
+      url "https://s3.gocoder.org/releases/gocode/v0.1.43/gocode-0.1.43-linux-arm64.tar.gz"
+      sha256 "3be9d23a13d18494744c364cf5a53710cb94858072857a2e901f56086334d4c5"
     end
     on_intel do
-      url "https://s3.gocoder.org/releases/gocode/v0.1.42/gocode-0.1.42-linux-x64.tar.gz"
-      sha256 "ecc52c7dc909626ebac28ecbf563aa17f630d68120c5f638f502edbd9845c1f0"
+      url "https://s3.gocoder.org/releases/gocode/v0.1.43/gocode-0.1.43-linux-x64.tar.gz"
+      sha256 "2c2b7b7080efd52807a269dd9ab0e409bb6d5fdba8b6f60926c798f69cff6860"
     end
   end
 
