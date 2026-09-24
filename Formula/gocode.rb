@@ -13,22 +13,22 @@ class Gocode < Formula
   on_macos do
     on_arm do
       url "https://github.com/langazov/gocode/releases/download/v0.2.6/gocode-0.2.6-macos-arm64.tar.gz"
-      sha256 "07a03e4e3bebbeeb8fbcca3d0bc35facdbbb8cac01c4017bb054b6f64c8d3959"
+      sha256 "8a3af759205f092bc8f10f9f75323d592ee325bb2e5921ca56ebca3a1afb792b"
     end
     on_intel do
       url "https://github.com/langazov/gocode/releases/download/v0.2.6/gocode-0.2.6-macos-x64.tar.gz"
-      sha256 "4b9992c5bf3e7f57f53f9f0f40d6e53ba0d18c71d48999d6ae306156d1a5f43b"
+      sha256 "acc76a4320403fc425739c9ea9a230f21ecd8d7c202185ed7915d13bd02b1bab"
     end
   end
 
   on_linux do
     on_arm do
       url "https://github.com/langazov/gocode/releases/download/v0.2.6/gocode-0.2.6-linux-arm64.tar.gz"
-      sha256 "bcbac0ef28e58a2b14ff3718e74544a86b50f94d5a81e2f83f2cb25e79391e9b"
+      sha256 "b14b18aeb00c25dd3957d3cbff9fd91887185376d4d0d12305dea96acdf4c35c"
     end
     on_intel do
       url "https://github.com/langazov/gocode/releases/download/v0.2.6/gocode-0.2.6-linux-x64.tar.gz"
-      sha256 "e5196c2279b18ad63b08a82fd4427f11c19e329ed0b4c35a4d655dc9a778839c"
+      sha256 "d2e4e0f6bb253fcc3a0b4aa639d2462d8b60d154eb8e663de8ffd6f803abdea2"
     end
   end
 
