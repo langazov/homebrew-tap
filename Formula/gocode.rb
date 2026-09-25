@@ -12,23 +12,23 @@ class Gocode < Formula
 
   on_macos do
     on_arm do
-      url "https://github.com/langazov/gocode/releases/download/v0.2.6/gocode-0.2.6-macos-arm64.tar.gz"
-      sha256 "8a3af759205f092bc8f10f9f75323d592ee325bb2e5921ca56ebca3a1afb792b"
+      url "https://github.com/langazov/gocode/releases/download/v0.2.7/gocode-0.2.7-macos-arm64.tar.gz"
+      sha256 "ef93ddf318740584682ef59e8699735dda69b5236ab724f1f1562a3854d7142d"
     end
     on_intel do
-      url "https://github.com/langazov/gocode/releases/download/v0.2.6/gocode-0.2.6-macos-x64.tar.gz"
-      sha256 "acc76a4320403fc425739c9ea9a230f21ecd8d7c202185ed7915d13bd02b1bab"
+      url "https://github.com/langazov/gocode/releases/download/v0.2.7/gocode-0.2.7-macos-x64.tar.gz"
+      sha256 "17a9c3f6ff9df4ecb8a80a560b663796d4d3e16b29ca765d80ed8e889508660f"
     end
   end
 
   on_linux do
     on_arm do
-      url "https://github.com/langazov/gocode/releases/download/v0.2.6/gocode-0.2.6-linux-arm64.tar.gz"
-      sha256 "b14b18aeb00c25dd3957d3cbff9fd91887185376d4d0d12305dea96acdf4c35c"
+      url "https://github.com/langazov/gocode/releases/download/v0.2.7/gocode-0.2.7-linux-arm64.tar.gz"
+      sha256 "7d232631a5c5396845e0be98451ea7a09c9df53410add0ea72ca05e5b29c75a3"
     end
     on_intel do
-      url "https://github.com/langazov/gocode/releases/download/v0.2.6/gocode-0.2.6-linux-x64.tar.gz"
-      sha256 "d2e4e0f6bb253fcc3a0b4aa639d2462d8b60d154eb8e663de8ffd6f803abdea2"
+      url "https://github.com/langazov/gocode/releases/download/v0.2.7/gocode-0.2.7-linux-x64.tar.gz"
+      sha256 "d64b2f1650972f1cabb917b8e1067cb737687a8d950fe3c14fa073d2cfd1a723"
     end
   end
 
@@ -37,13 +37,14 @@ class Gocode < Formula
     # A general LSP server, not a gocode internal: editors are pointed at it
     # directly, and gocode's own registry finds it by name on PATH.
     bin.install "mdlsp"
-    # The plugin stays out of PATH — it is not a command anyone runs — but
-    # keeps its directory layout, since the loader resolves a plugin by
+    # The plugins stay out of PATH — neither is a command anyone runs — but
+    # keep their directory layout, since the loader resolves a plugin by
     # reading gocode-plugin.json next to the binary.
     libexec.install "rag-plugin"
+    libexec.install "library-plugin"
   end
 
-  # Wire both extras into the user's global config. Homebrew runs this as the
+  # Wire the extras into the user's global config. Homebrew runs this as the
   # user, so it reaches ~/.config/gocode; the edits are idempotent, preserve
   # every other key, and refuse to rewrite a config carrying comments.
   #
@@ -69,6 +70,8 @@ class Gocode < Formula
       ["plugin", "disable", (opt_libexec/"rag-plugin").to_s, "--global"],
       ["plugin", "enable", "rag-plugin",
        "--global", "--options", '{"embeddingProvider":"openai"}'],
+      ["plugin", "disable", (opt_libexec/"library-plugin").to_s, "--global"],
+      ["plugin", "enable", "library-plugin", "--global"],
     ].each do |args|
       system bin/"gocode", *args
     rescue StandardError => e
@@ -79,28 +82,37 @@ class Gocode < Formula
 
   def caveats
     <<~EOS
-      Two extras were installed alongside gocode and wired into
+      Three extras were installed alongside gocode and wired into
       ~/.config/gocode:
 
-        mdlsp       markdown language server, started for .md files
-        rag-plugin  semantic code search (rag_index / rag_search tools)
+        mdlsp           markdown language server, started for .md files
+        rag-plugin      semantic code search (rag_index / rag_search tools)
+        library-plugin  search over your gocoder.org Library
+                        (library_search / library_list / library_get /
+                        library_upload tools)
 
       rag-plugin embeds through an OpenAI-compatible endpoint, so it needs a
       credential before its tools will work:
 
         gocode auth login
 
-      To turn either off again (the files stay installed):
+      library-plugin talks to gocoder.org, so it needs an account first:
+
+        gocode login
+
+      To turn any of them off again (the files stay installed):
 
         gocode lsp disable mdlsp
         gocode plugin disable rag-plugin
+        gocode plugin disable library-plugin
     EOS
   end
 
   test do
     assert_match version.to_s, shell_output("#{bin}/gocode --version")
     assert_match "mdlsp", shell_output("#{bin}/mdlsp --version")
-    # The manifest is what makes the directory loadable as a plugin.
+    # The manifest is what makes a directory loadable as a plugin.
     assert_predicate libexec/"rag-plugin/gocode-plugin.json", :exist?
+    assert_predicate libexec/"library-plugin/gocode-plugin.json", :exist?
   end
 end
