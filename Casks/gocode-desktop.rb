@@ -2,7 +2,7 @@
 # DO NOT EDIT; changes are overwritten on the next release.
 cask "gocode-desktop" do
   version "0.3.0"
-  sha256 "8c76db11661dacef7b9dc1f3c29c9578728ecaed721646590c576d65a08ec1c5"
+  sha256 "de239ae0b550caf59894d25ac805003b509fe9f2e47a59ccbda5480e09adb046"
 
   url "https://github.com/langazov/gocode/releases/download/v#{version}/gocode-desktop-#{version}-macos-universal.zip"
   name "gocode"
