@@ -12,23 +12,23 @@ class Gocode < Formula
 
   on_macos do
     on_arm do
-      url "https://github.com/langazov/gocode/releases/download/v0.3.0/gocode-0.3.0-macos-arm64.tar.gz"
-      sha256 "a0115e2964536cfafa2a85e4ecfff9f8e3ced7930bb097ac000147c510cb0521"
+      url "https://github.com/langazov/gocode/releases/download/v0.4.0/gocode-0.4.0-macos-arm64.tar.gz"
+      sha256 "93cbcbcfce1295bb171db42dc6a676b7d90fc9bb4878f2a90a6a95aeba27d852"
     end
     on_intel do
-      url "https://github.com/langazov/gocode/releases/download/v0.3.0/gocode-0.3.0-macos-x64.tar.gz"
-      sha256 "c37146d99f96f22a715c1ebd7c412c09ceac1f6172e8217c80fb3932be87f6aa"
+      url "https://github.com/langazov/gocode/releases/download/v0.4.0/gocode-0.4.0-macos-x64.tar.gz"
+      sha256 "95c136e4912f4714a66321de03272d391b7554ae64826684b8016ff7e0ae9450"
     end
   end
 
   on_linux do
     on_arm do
-      url "https://github.com/langazov/gocode/releases/download/v0.3.0/gocode-0.3.0-linux-arm64.tar.gz"
-      sha256 "8e69fe4ab5a0b1d6182be66c211791ce46b85021ee44449680ffd1539d251075"
+      url "https://github.com/langazov/gocode/releases/download/v0.4.0/gocode-0.4.0-linux-arm64.tar.gz"
+      sha256 "b9dc1180079a8ebcea1b6c49e3a768824fccdf46d742a771bd49c28a03dcba17"
     end
     on_intel do
-      url "https://github.com/langazov/gocode/releases/download/v0.3.0/gocode-0.3.0-linux-x64.tar.gz"
-      sha256 "c340e82b865dd110663e0dd47eaa9fd599c7891c178c3c7504e1adca8bfaf032"
+      url "https://github.com/langazov/gocode/releases/download/v0.4.0/gocode-0.4.0-linux-x64.tar.gz"
+      sha256 "56f13e1e37047fb4724fbcf3127e1cd65319e6078fd02f76b313cd1f4f887462"
     end
   end
 
